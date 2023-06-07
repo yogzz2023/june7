@@ -1,0 +1,24 @@
+#include <stdio.h>
+#include <sys/stat.h>
+
+int main() {
+    const char *filePath = "/home/yogesh/test";
+
+    // Get current file permissions
+    struct stat fileStat;
+    if (stat(filePath, &fileStat) != 0) {
+        perror("stat");
+        return 1;
+    }
+
+    // Remove write permissions for all users
+    fileStat.st_mode &= ~(S_IWUSR | S_IWGRP | S_IWOTH);
+
+    // Set the new file permissions
+    if (chmod(filePath, fileStat.st_mode) != 0) {
+        perror("chmod");
+        return 1;
+    }
+    printf("Lock symbol removed successfully.\n");
+    return 0;
+}
